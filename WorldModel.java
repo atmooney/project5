@@ -110,13 +110,14 @@ final class WorldModel
       {
          Point pt = new Point(Integer.parseInt(properties[Functions.MINER_COL]),
                  Integer.parseInt(properties[Functions.MINER_ROW]));
-         Entity entity = Entity.createMinerNotFull(properties[Functions.MINER_ID],
-                 Integer.parseInt(properties[Functions.MINER_LIMIT]),
+         MinerNotFull miner = new MinerNotFull(properties[Functions.MINER_ID],
                  pt,
+                 imageStore.getImageList(Functions.MINER_KEY),
+                 Integer.parseInt(properties[Functions.MINER_LIMIT]),
+                 0,
                  Integer.parseInt(properties[Functions.MINER_ACTION_PERIOD]),
-                 Integer.parseInt(properties[Functions.MINER_ANIMATION_PERIOD]),
-                 imageStore.getImageList(Functions.MINER_KEY));
-         tryAddEntity(entity);
+                 Integer.parseInt(properties[Functions.MINER_ANIMATION_PERIOD]));
+         tryAddEntity((Entity)miner);
       }
 
       return properties.length == Functions.MINER_NUM_PROPERTIES;
@@ -128,9 +129,9 @@ final class WorldModel
          Point pt = new Point(
                  Integer.parseInt(properties[Functions.OBSTACLE_COL]),
                  Integer.parseInt(properties[Functions.OBSTACLE_ROW]));
-         Entity entity = createObstacle(properties[Functions.OBSTACLE_ID],
+         Obstacle obstacle = new Obstacle(properties[Functions.OBSTACLE_ID],
                  pt, imageStore.getImageList(Functions.OBSTACLE_KEY));
-         tryAddEntity(entity);
+         tryAddEntity(obstacle);
       }
 
       return properties.length == Functions.OBSTACLE_NUM_PROPERTIES;
@@ -142,10 +143,10 @@ final class WorldModel
       {
          Point pt = new Point(Integer.parseInt(properties[Functions.ORE_COL]),
                  Integer.parseInt(properties[Functions.ORE_ROW]));
-         Entity entity = createOre(properties[Functions.ORE_ID],
-                 pt, Integer.parseInt(properties[Functions.ORE_ACTION_PERIOD]),
-                 imageStore.getImageList(Functions.ORE_KEY));
-         tryAddEntity(entity);
+         Ore ore = new Ore(properties[Functions.ORE_ID],
+                 pt, imageStore.getImageList(Functions.ORE_KEY),
+                 Integer.parseInt(properties[Functions.ORE_ACTION_PERIOD]));
+         tryAddEntity(ore);
       }
 
       return properties.length == Functions.ORE_NUM_PROPERTIES;
@@ -157,9 +158,9 @@ final class WorldModel
       {
          Point pt = new Point(Integer.parseInt(properties[Functions.SMITH_COL]),
                  Integer.parseInt(properties[Functions.SMITH_ROW]));
-         Entity entity = createBlacksmith(properties[Functions.SMITH_ID],
+         Blacksmith blacksmith = new Blacksmith(properties[Functions.SMITH_ID],
                  pt, imageStore.getImageList(Functions.SMITH_KEY));
-         tryAddEntity(entity);
+         tryAddEntity(blacksmith);
       }
 
       return properties.length == Functions.SMITH_NUM_PROPERTIES;
@@ -170,11 +171,11 @@ final class WorldModel
       {
          Point pt = new Point(Integer.parseInt(properties[Functions.VEIN_COL]),
                  Integer.parseInt(properties[Functions.VEIN_ROW]));
-         Entity entity = createVein(properties[Functions.VEIN_ID],
+         Vein vein = new Vein(properties[Functions.VEIN_ID],
                  pt,
-                 Integer.parseInt(properties[Functions.VEIN_ACTION_PERIOD]),
-                 imageStore.getImageList(Functions.VEIN_KEY));
-         tryAddEntity(entity);
+                 imageStore.getImageList(Functions.VEIN_KEY),
+                 Integer.parseInt(properties[Functions.VEIN_ACTION_PERIOD]));
+         tryAddEntity(vein);
       }
 
       return properties.length == Functions.VEIN_NUM_PROPERTIES;
@@ -182,7 +183,7 @@ final class WorldModel
 
    private void tryAddEntity(Entity entity)
    {
-      if (isOccupied(entity.position))
+      if (isOccupied(entity.getPosition()))
       {
          // arguably the wrong type of exception, but we are not
          // defining our own exceptions yet
@@ -204,27 +205,27 @@ final class WorldModel
    }
    public void addEntity(Entity entity)
    {
-      if (this.withinBounds(entity.position))
+      if (this.withinBounds(entity.getPosition()))
       {
-         setOccupancyCell(entity.position, entity);
+         setOccupancyCell(entity.getPosition(), entity);
          this.entities.add(entity);
       }
    }
 
    public void moveEntity(Entity entity, Point pos)
    {
-      Point oldPos = entity.position;
+      Point oldPos = entity.getPosition();
       if (this.withinBounds(pos) && !pos.equals(oldPos))
       {
          setOccupancyCell(oldPos, null);
          removeEntityAt(pos);
          setOccupancyCell(pos, entity);
-         entity.position = pos;
+         entity.setPosition(pos);
       }
    }
    public void removeEntity(Entity entity)
    {
-      removeEntityAt(entity.position);
+      removeEntityAt(entity.getPosition());
    }
 
    private void removeEntityAt(Point pos)
@@ -236,7 +237,7 @@ final class WorldModel
 
          /* this moves the entity just outside of the grid for
             debugging purposes */
-         entity.position = new Point(-1, -1);
+         entity.setPosition(new Point(-1, -1));
          this.entities.remove(entity);
          setOccupancyCell(pos, null);
       }
@@ -245,7 +246,7 @@ final class WorldModel
    {
       if (this.withinBounds(pos))
       {
-         return Optional.of(Entity.getCurrentImage(getBackgroundCell(pos)));
+         return Optional.of(ImageStore.getCurrentImage(getBackgroundCell(pos)));
       }
       else
       {
@@ -290,28 +291,5 @@ final class WorldModel
    private void setBackgroundCell(Point pos, Background background)
    {
       this.background[pos.y][pos.x] = background;
-   }
-   private Entity createBlacksmith(String id, Point position,
-                                   List<PImage> images)
-   {
-      return new Entity(EntityKind.BLACKSMITH, id, position, images,
-              0, 0, 0, 0);
-   }
-   private Entity createObstacle(String id, Point position,
-                                       List<PImage> images)
-   {
-      return new Entity(EntityKind.OBSTACLE, id, position, images,
-              0, 0, 0, 0);
-   }
-   public static Entity createOre(String id, Point position, int actionPeriod,
-                                  List<PImage> images)
-   {
-      return new Entity(EntityKind.ORE, id, position, images, 0, 0,
-              actionPeriod, 0);
-   }
-   private Entity createVein(String id, Point position, int actionPeriod,
-                                   List<PImage> images) {
-      return new Entity(EntityKind.VEIN, id, position, images, 0, 0,
-              actionPeriod, 0);
    }
 }

@@ -157,7 +157,8 @@ public final class VirtualWorld
    {
       for (Entity entity : world.entities)
       {
-         entity.scheduleActions(scheduler, world, imageStore);
+         if (entity instanceof ActivityEntity)
+            ((ActivityEntity)entity).scheduleActions(scheduler, world, imageStore);
       }
    }
 

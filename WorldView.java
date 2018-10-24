@@ -54,12 +54,12 @@ final class WorldView
    {
       for (Entity entity : this.world.entities)
       {
-         Point pos = entity.position;
+         Point pos = entity.getPosition();
 
          if (this.viewport.contains(pos))
          {
             Point viewPoint = this.viewport.worldToViewport(pos.x, pos.y);
-            this.screen.image(Entity.getCurrentImage(entity),
+            this.screen.image(ImageStore.getCurrentImage(entity),
                     viewPoint.x * this.tileWidth, viewPoint.y * this.tileHeight);
          }
       }

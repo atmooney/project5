@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import processing.core.PImage;
 
-final class Entity
+public interface Entity
 {
-   public EntityKind kind;
-   private final String id;
+   /*public EntityKind kind;
+   private final String id
    public Point position;
    private List<PImage> images;
    private int imageIndex;
@@ -29,9 +29,12 @@ final class Entity
       this.resourceCount = resourceCount;
       this.actionPeriod = actionPeriod;
       this.animationPeriod = animationPeriod;
-   }
+   }*/
+   Point getPosition();
+   List<PImage> getImages();
+   int getImageIndex();
+   void setPosition(Point p);/*
 
-   public static PImage getCurrentImage(Object entity)
    {
       if (entity instanceof Background)
       {
@@ -48,9 +51,9 @@ final class Entity
                  String.format("getCurrentImage not supported for %s",
                          entity));
       }
-   }
-   public int getAnimationPeriod()
-   {
+   }*/
+   //int getAnimationPeriod();
+   /*{
       switch (this.kind)
       {
          case MINER_FULL:
@@ -63,9 +66,8 @@ final class Entity
                     String.format("getAnimationPeriod not supported for %s",
                             this.kind));
       }
-   }
-   public void nextImage()
-   {
+   }*/
+   /*{
       this.imageIndex = (this.imageIndex + 1) % this.images.size();
    }
    public void executeMinerFullActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
@@ -163,10 +165,9 @@ final class Entity
       scheduler.scheduleEvent(this,
               createActivityAction(world, imageStore),
               this.actionPeriod);
-   }
-   public void scheduleActions(EventScheduler scheduler,
-                                      WorldModel world, ImageStore imageStore)
-   {
+   }*/
+   //void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore);
+   /*{
       switch (this.kind)
       {
          case MINER_FULL:
@@ -373,14 +374,14 @@ final class Entity
       }
 
       return newPos;
-   }
-   public Action createAnimationAction(int repeatCount)
-   {
-      return new Action(ActionKind.ANIMATION, this, null, null, repeatCount);
+   }*/
+   //Action createAnimationAction(int repeatCount);
+   /*{
+      return new Animation(this, null, null, repeatCount);
    }
 
    private Action createActivityAction(WorldModel world, ImageStore imageStore) {
-      return new Action(ActionKind.ACTIVITY, this, world, imageStore, 0);
+      return new Activity(this, world, imageStore, 0);
    }
 
    private Entity createMinerFull(String id, int resourceLimit,
@@ -459,5 +460,5 @@ final class Entity
    {
       return (p1.x == p2.x && Math.abs(p1.y - p2.y) == 1) ||
               (p1.y == p2.y && Math.abs(p1.x - p2.x) == 1);
-   }
+   }*/
 }
