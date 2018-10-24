@@ -6,7 +6,7 @@ import processing.core.PImage;
 
 public class MinerFull implements Entity, ActivityEntity, AnimationEntity{
     private final String id;
-    public Point position;
+    private Point position;
     private List<PImage> images;
     private int imageIndex;
     private final int resourceLimit;
@@ -128,7 +128,7 @@ public class MinerFull implements Entity, ActivityEntity, AnimationEntity{
                                          Class lass)
     {
         List<Entity> ofType = new LinkedList<>();
-        for (Entity entity : world.entities)
+        for (Entity entity : world.getEntities())
         {
             if (lass.isInstance(entity))
             {

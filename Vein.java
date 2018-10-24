@@ -6,7 +6,7 @@ import processing.core.PImage;
 
 public class Vein implements Entity, ActivityEntity{
     private final String id;
-    public Point position;
+    private Point position;
     private List<PImage> images;
     private int imageIndex;
     private final int actionPeriod;

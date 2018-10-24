@@ -5,11 +5,11 @@ import java.util.Optional;
 
 final class WorldView
 {
-   public PApplet screen;
-   public WorldModel world;
-   public int tileWidth;
-   public int tileHeight;
-   public Viewport viewport;
+   private PApplet screen;
+   private WorldModel world;
+   private int tileWidth;
+   private int tileHeight;
+   private Viewport viewport;
 
    public WorldView(int numRows, int numCols, PApplet screen, WorldModel world,
       int tileWidth, int tileHeight)
@@ -23,9 +23,9 @@ final class WorldView
    public void shiftView(int colDelta, int rowDelta)
    {
       int newCol = clamp(this.viewport.col + colDelta, 0,
-              this.world.numCols - this.viewport.numCols);
+              this.world.getNumCols() - this.viewport.numCols);
       int newRow = clamp(this.viewport.row + rowDelta, 0,
-              this.world.numRows - this.viewport.numRows);
+              this.world.getNumRows() - this.viewport.numRows);
 
       this.viewport.shift(newCol, newRow);
    }
@@ -52,7 +52,7 @@ final class WorldView
    }
    private void drawEntities()
    {
-      for (Entity entity : this.world.entities)
+      for (Entity entity : this.world.getEntities())
       {
          Point pos = entity.getPosition();
 

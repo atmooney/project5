@@ -6,7 +6,7 @@ import processing.core.PImage;
 
 public class Quake implements Entity, ActivityEntity, AnimationEntity{
     private final String id;
-    public Point position;
+    private Point position;
     private List<PImage> images;
     private int imageIndex;
     private final int actionPeriod;

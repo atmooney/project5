@@ -4,11 +4,11 @@ import java.util.*;
 
 final class WorldModel
 {
-   public int numRows;
-   public int numCols;
+   private int numRows;
+   private int numCols;
    private final Background background[][];
    private final Entity occupancy[][];
-   public Set<Entity> entities;
+   private Set<Entity> entities;
 
    public WorldModel(int numRows, int numCols, Background defaultBackground)
    {
@@ -23,6 +23,9 @@ final class WorldModel
          Arrays.fill(this.background[row], defaultBackground);
       }
    }
+   public int getNumRows(){return numRows;}
+   public int getNumCols(){return numCols;}
+   public Set<Entity> getEntities(){return entities;}
    public Optional<Point> findOpenAround(Point pos)
    {
       for (int dy = -Functions.ORE_REACH; dy <= Functions.ORE_REACH; dy++)
