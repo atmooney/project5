@@ -2,7 +2,7 @@ import java.util.List;
 
 import processing.core.PImage;
 
-public class Ore extends ActivityEntity {
+public class Ore extends VeinOreSched {
 
     public Ore(Point position,
                   List<PImage> images,
@@ -28,8 +28,4 @@ public class Ore extends ActivityEntity {
         world.addEntity(blob);
         blob.scheduleActions(scheduler, world, imageStore);
     }
-    public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore)
-   {
-            scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
-   }
 }
