@@ -28,15 +28,16 @@ final class WorldModel
    public Set<Entity> getEntities(){return entities;}
    public Optional<Point> findOpenAround(Point pos)
    {
-      for (int dy = -Functions.ORE_REACH; dy <= Functions.ORE_REACH; dy++)
+      for (int dy = -VirtualWorld.ORE_REACH; dy <= VirtualWorld.ORE_REACH; dy++)
       {
-         for (int dx = -Functions.ORE_REACH; dx <= Functions.ORE_REACH; dx++)
+         for (int dx = -VirtualWorld.ORE_REACH; dx <= VirtualWorld.ORE_REACH; dx++)
          {
             Point newPt = new Point(pos.x + dx, pos.y + dy);
             if (withinBounds(newPt) &&
                     !isOccupied(newPt))
             {
                return Optional.of(newPt);
+
             }
          }
       }
@@ -75,19 +76,19 @@ final class WorldModel
       String[] properties = line.split("\\s");
       if (properties.length > 0)
       {
-         switch (properties[Functions.PROPERTY_KEY])
+         switch (properties[VirtualWorld.PROPERTY_KEY])
          {
-            case Functions.BGND_KEY:
+            case VirtualWorld.BGND_KEY:
                return parseBackground(properties, imageStore);
-            case Functions.MINER_KEY:
+            case VirtualWorld.MINER_KEY:
                return parseMiner(properties, imageStore);
-            case Functions.OBSTACLE_KEY:
+            case VirtualWorld.OBSTACLE_KEY:
                return parseObstacle(properties, imageStore);
-            case Functions.ORE_KEY:
+            case VirtualWorld.ORE_KEY:
                return parseOre(properties, imageStore);
-            case Functions.SMITH_KEY:
+            case VirtualWorld.SMITH_KEY:
                return parseSmith(properties, imageStore);
-            case Functions.VEIN_KEY:
+            case VirtualWorld.VEIN_KEY:
                return parseVein(properties, imageStore);
          }
       }
@@ -96,95 +97,89 @@ final class WorldModel
    }
    private boolean parseBackground(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.BGND_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.BGND_NUM_PROPERTIES)
       {
-         Point pt = new Point(Integer.parseInt(properties[Functions.BGND_COL]),
-                 Integer.parseInt(properties[Functions.BGND_ROW]));
-         String id = properties[Functions.BGND_ID];
+         Point pt = new Point(Integer.parseInt(properties[VirtualWorld.BGND_COL]),
+                 Integer.parseInt(properties[VirtualWorld.BGND_ROW]));
+         String id = properties[VirtualWorld.BGND_ID];
          setBackground(pt, new Background(id, imageStore.getImageList(id)));
       }
 
-      return properties.length == Functions.BGND_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.BGND_NUM_PROPERTIES;
    }
 
    private boolean parseMiner(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.MINER_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.MINER_NUM_PROPERTIES)
       {
-         Point pt = new Point(Integer.parseInt(properties[Functions.MINER_COL]),
-                 Integer.parseInt(properties[Functions.MINER_ROW]));
-         MinerNotFull miner = new MinerNotFull(properties[Functions.MINER_ID],
-                 pt,
-                 imageStore.getImageList(Functions.MINER_KEY),
-                 Integer.parseInt(properties[Functions.MINER_LIMIT]),
+         Point pt = new Point(Integer.parseInt(properties[VirtualWorld.MINER_COL]),
+                 Integer.parseInt(properties[VirtualWorld.MINER_ROW]));
+         MinerNotFull miner = new MinerNotFull(pt,
+                 imageStore.getImageList(VirtualWorld.MINER_KEY),
+                 Integer.parseInt(properties[VirtualWorld.MINER_LIMIT]),
                  0,
-                 Integer.parseInt(properties[Functions.MINER_ACTION_PERIOD]),
-                 Integer.parseInt(properties[Functions.MINER_ANIMATION_PERIOD]));
-         tryAddEntity((Entity)miner);
+                 Integer.parseInt(properties[VirtualWorld.MINER_ACTION_PERIOD]),
+                 Integer.parseInt(properties[VirtualWorld.MINER_ANIMATION_PERIOD]));
+         tryAddEntity(miner);
       }
 
-      return properties.length == Functions.MINER_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.MINER_NUM_PROPERTIES;
    }
    private boolean parseObstacle(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.OBSTACLE_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.OBSTACLE_NUM_PROPERTIES)
       {
          Point pt = new Point(
-                 Integer.parseInt(properties[Functions.OBSTACLE_COL]),
-                 Integer.parseInt(properties[Functions.OBSTACLE_ROW]));
-         Obstacle obstacle = new Obstacle(properties[Functions.OBSTACLE_ID],
-                 pt, imageStore.getImageList(Functions.OBSTACLE_KEY));
+                 Integer.parseInt(properties[VirtualWorld.OBSTACLE_COL]),
+                 Integer.parseInt(properties[VirtualWorld.OBSTACLE_ROW]));
+         Obstacle obstacle = new Obstacle(pt, imageStore.getImageList(VirtualWorld.OBSTACLE_KEY));
          tryAddEntity(obstacle);
       }
 
-      return properties.length == Functions.OBSTACLE_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.OBSTACLE_NUM_PROPERTIES;
    }
 
    private boolean parseOre(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.ORE_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.ORE_NUM_PROPERTIES)
       {
-         Point pt = new Point(Integer.parseInt(properties[Functions.ORE_COL]),
-                 Integer.parseInt(properties[Functions.ORE_ROW]));
-         Ore ore = new Ore(properties[Functions.ORE_ID],
-                 pt, imageStore.getImageList(Functions.ORE_KEY),
-                 Integer.parseInt(properties[Functions.ORE_ACTION_PERIOD]));
+         Point pt = new Point(Integer.parseInt(properties[VirtualWorld.ORE_COL]),
+                 Integer.parseInt(properties[VirtualWorld.ORE_ROW]));
+         Ore ore = new Ore(pt, imageStore.getImageList(VirtualWorld.ORE_KEY),
+                 Integer.parseInt(properties[VirtualWorld.ORE_ACTION_PERIOD]));
          tryAddEntity(ore);
       }
 
-      return properties.length == Functions.ORE_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.ORE_NUM_PROPERTIES;
    }
 
    private boolean parseSmith(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.SMITH_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.SMITH_NUM_PROPERTIES)
       {
-         Point pt = new Point(Integer.parseInt(properties[Functions.SMITH_COL]),
-                 Integer.parseInt(properties[Functions.SMITH_ROW]));
-         Blacksmith blacksmith = new Blacksmith(properties[Functions.SMITH_ID],
-                 pt, imageStore.getImageList(Functions.SMITH_KEY));
+         Point pt = new Point(Integer.parseInt(properties[VirtualWorld.SMITH_COL]),
+                 Integer.parseInt(properties[VirtualWorld.SMITH_ROW]));
+         Blacksmith blacksmith = new Blacksmith(pt, imageStore.getImageList(VirtualWorld.SMITH_KEY));
          tryAddEntity(blacksmith);
       }
 
-      return properties.length == Functions.SMITH_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.SMITH_NUM_PROPERTIES;
    }
    private boolean parseVein(String [] properties, ImageStore imageStore)
    {
-      if (properties.length == Functions.VEIN_NUM_PROPERTIES)
+      if (properties.length == VirtualWorld.VEIN_NUM_PROPERTIES)
       {
-         Point pt = new Point(Integer.parseInt(properties[Functions.VEIN_COL]),
-                 Integer.parseInt(properties[Functions.VEIN_ROW]));
-         Vein vein = new Vein(properties[Functions.VEIN_ID],
-                 pt,
-                 imageStore.getImageList(Functions.VEIN_KEY),
-                 Integer.parseInt(properties[Functions.VEIN_ACTION_PERIOD]));
+         Point pt = new Point(Integer.parseInt(properties[VirtualWorld.VEIN_COL]),
+                 Integer.parseInt(properties[VirtualWorld.VEIN_ROW]));
+         Vein vein = new Vein(pt, imageStore.getImageList(VirtualWorld.VEIN_KEY),
+                 Integer.parseInt(properties[VirtualWorld.VEIN_ACTION_PERIOD]));
          tryAddEntity(vein);
       }
 
-      return properties.length == Functions.VEIN_NUM_PROPERTIES;
+      return properties.length == VirtualWorld.VEIN_NUM_PROPERTIES;
    }
 
-   private void tryAddEntity(Entity entity)
+   public void tryAddEntity(Entity entity)
    {
       if (isOccupied(entity.getPosition()))
       {

@@ -49,11 +49,12 @@ final class ImageStore
             List<PImage> imgs = getImages(images, key);
             imgs.add(img);
 
-            if (attrs.length >= Functions.KEYED_IMAGE_MIN)
+            if (attrs.length >= VirtualWorld.KEYED_IMAGE_MIN)
             {
-               int r = Integer.parseInt(attrs[Functions.KEYED_RED_IDX]);
-               int g = Integer.parseInt(attrs[Functions.KEYED_GREEN_IDX]);
-               int b = Integer.parseInt(attrs[Functions.KEYED_BLUE_IDX]);
+               int r = Integer.parseInt(attrs[VirtualWorld.KEYED_RED_IDX]);
+
+               int g = Integer.parseInt(attrs[VirtualWorld.KEYED_GREEN_IDX]);
+               int b = Integer.parseInt(attrs[VirtualWorld.KEYED_BLUE_IDX]);
                setAlpha(img, screen.color(r, g, b), 0);
             }
          }
@@ -74,12 +75,12 @@ final class ImageStore
    private void setAlpha(PImage img, int maskColor, int alpha)
    {
       int alphaValue = alpha << 24;
-      int nonAlpha = maskColor & Functions.COLOR_MASK;
+      int nonAlpha = maskColor & VirtualWorld.COLOR_MASK;
       img.format = PApplet.ARGB;
       img.loadPixels();
       for (int i = 0; i < img.pixels.length; i++)
       {
-         if ((img.pixels[i] & Functions.COLOR_MASK) == nonAlpha)
+         if ((img.pixels[i] & VirtualWorld.COLOR_MASK) == nonAlpha)
          {
             img.pixels[i] = alphaValue | nonAlpha;
          }
