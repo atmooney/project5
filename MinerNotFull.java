@@ -23,23 +23,23 @@ public class MinerNotFull extends Miners{
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> notFullTarget = findNearest(world, this.position,
+        Optional<Entity> notFullTarget = findNearest(world, position,
                 Ore.class);
 
         if (!notFullTarget.isPresent() ||
-                !this.moveTo( world, notFullTarget.get(), scheduler) ||
-                !this.transform(world, scheduler, imageStore))
+                !moveTo( world, notFullTarget.get(), scheduler) ||
+                !transform(world, scheduler, imageStore))
         {
             scheduler.scheduleEvent(this,
                     createActivityAction(world, imageStore),
-                    this.actionPeriod);
+                    actionPeriod);
         }
     }
     private boolean transform(WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
-        if (this.resourceCount >= this.resourceLimit)
+        if (resourceCount >= resourceLimit)
         {
-            MinerFull miner = new MinerFull(this.position, this.images, this.resourceLimit, 0, this.actionPeriod, this.animationPeriod);
+            MinerFull miner = new MinerFull(position, images, resourceLimit, 0, actionPeriod, animationPeriod);
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);
@@ -54,9 +54,9 @@ public class MinerNotFull extends Miners{
     }
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)
     {
-        if (adjacent(this.position, target.getPosition()))
+        if (adjacent(position, target.getPosition()))
         {
-            this.resourceCount += 1;
+            resourceCount += 1;
             world.removeEntity(target);
             scheduler.unscheduleAllEvents(target);
 
@@ -64,9 +64,9 @@ public class MinerNotFull extends Miners{
         }
         else
         {
-            Point nextPos = this.nextPosition(world, target.getPosition());
+            Point nextPos = nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos))
+            if (!position.equals(nextPos))
             {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent())

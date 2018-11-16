@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +19,17 @@ public class OreBlob extends SchedThreeEntities{
     }
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> blobTarget = findNearest(world,
-                this.position, Vein.class);
-        long nextPeriod = this.actionPeriod;
+                position, Vein.class);
+        long nextPeriod = actionPeriod;
 
         if (blobTarget.isPresent()) {
             Point tgtPos = blobTarget.get().getPosition();
 
-            if (this.moveTo(world, blobTarget.get(), scheduler)) {
+            if (moveTo(world, blobTarget.get(), scheduler)) {
                 Quake quake = new Quake(tgtPos, imageStore.getImageList(VirtualWorld.QUAKE_KEY), VirtualWorld.QUAKE_ACTION_PERIOD, VirtualWorld.QUAKE_ANIMATION_PERIOD);
 
                 world.addEntity(quake);
-                nextPeriod += this.actionPeriod;
+                nextPeriod += actionPeriod;
                 quake.scheduleActions(scheduler, world, imageStore);
             }
         }
@@ -37,9 +38,10 @@ public class OreBlob extends SchedThreeEntities{
                 createActivityAction(world, imageStore),
                 nextPeriod);
     }
+
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)
     {
-        if (adjacent(this.position, target.getPosition()))
+        if (adjacent(position, target.getPosition()))
         {
             world.removeEntity(target);
             scheduler.unscheduleAllEvents(target);
@@ -47,9 +49,9 @@ public class OreBlob extends SchedThreeEntities{
         }
         else
         {
-            Point nextPos = this.nextPosition(world, target.getPosition());
+            Point nextPos = nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos))
+            if (!position.equals(nextPos))
             {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent())
@@ -62,29 +64,14 @@ public class OreBlob extends SchedThreeEntities{
             return false;
         }
     }
-    public Point nextPosition(WorldModel world,
-                                      Point destPos)
+    public Point nextPosition(WorldModel world, Point destPos)
     {
-        int horiz = Integer.signum(destPos.x - this.position.x);
-        Point newPos = new Point(this.position.x + horiz,
-                this.position.y);
-
-        Optional<Entity> occupant = world.getOccupant(newPos);
-
-        if (horiz == 0 ||
-                (occupant.isPresent() && !(occupant.get().getClass() == Ore.class)))
-        {
-            int vert = Integer.signum(destPos.y - this.position.y);
-            newPos = new Point(this.position.x, this.position.y + vert);
-            occupant = world.getOccupant(newPos);
-
-            if (vert == 0 ||
-                    (occupant.isPresent() && !(occupant.get().getClass() == Ore.class)))
-            {
-                newPos = this.position;
-            }
+        PathingStrategy strategy = new AStarPathingStrategy();
+        List<Point> path = new ArrayList<>();
+        path = strategy.computePath(position, destPos, p -> world.withinBounds(p) && !world.isOccupied(p), (p1, p2) -> adjacent(p1, p2), PathingStrategy.DIAGONAL_CARDINAL_NEIGHBORS);
+        if(path.size()==0){
+            return position;
         }
-
-        return newPos;
+        return path.get(0);
     }
 }

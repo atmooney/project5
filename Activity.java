@@ -14,11 +14,8 @@ public class Activity implements Action {
         this.repeatCount = repeatCount;
     }
 
-    private void executeActivityAction(EventScheduler scheduler)
+    public void executeAction(EventScheduler scheduler)
     {
-        entity.executeActivity(this.world, this.imageStore, scheduler);
-    }
-    public void executeAction(EventScheduler scheduler){
-            this.executeActivityAction(scheduler);
+        entity.executeActivity(world, imageStore, scheduler);
     }
 }

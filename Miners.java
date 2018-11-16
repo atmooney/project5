@@ -1,23 +1,15 @@
+import java.util.ArrayList;
+import java.util.List;
+
 abstract class Miners extends SchedThreeEntities{
     public Point nextPosition(WorldModel world,
-                              Point destPos)
-    {
-        int horiz = Integer.signum(destPos.x - this.position.x);
-        Point newPos = new Point(this.position.x + horiz,
-                this.position.y);
-
-        if (horiz == 0 || world.isOccupied(newPos))
-        {
-            int vert = Integer.signum(destPos.y - this.position.y);
-            newPos = new Point(this.position.x,
-                    this.position.y + vert);
-
-            if (vert == 0 || world.isOccupied(newPos))
-            {
-                newPos = this.position;
-            }
+                              Point destPos) {
+        PathingStrategy strategy = new AStarPathingStrategy();
+        List<Point> path = new ArrayList<>();
+        path = strategy.computePath(position, destPos, p -> world.withinBounds(p) && !world.isOccupied(p), (p1, p2) -> adjacent(p1, p2), PathingStrategy.DIAGONAL_CARDINAL_NEIGHBORS);
+        if (path.size() == 0) {
+            return position;
         }
-
-        return newPos;
+        return path.get(0);
     }
 }

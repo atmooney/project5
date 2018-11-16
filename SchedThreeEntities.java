@@ -11,7 +11,7 @@ abstract class SchedThreeEntities extends AnimationEntity{
         scheduler.scheduleEvent(this, createAnimationAction( 0), this.getAnimationPeriod());
     }
     abstract boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler);
-    abstract Point nextPosition(WorldModel world, Point destPos);
+   // abstract Point nextPosition(WorldModel world, Point destPos);
     public Optional<Entity> findNearest(WorldModel world, Point pos, Class lass)
     {
         List<Entity> ofType = new LinkedList<>();

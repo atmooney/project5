@@ -23,24 +23,24 @@ public class MinerFull extends Miners{
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> fullTarget = findNearest(world, this.position,
+        Optional<Entity> fullTarget = findNearest(world, position,
                 Blacksmith.class);
 
         if (fullTarget.isPresent() &&
-                this.moveTo(world, fullTarget.get(), scheduler))
+                moveTo(world, fullTarget.get(), scheduler))
         {
-            this.transform(world, scheduler, imageStore);
+            transform(world, scheduler, imageStore);
         }
         else
         {
             scheduler.scheduleEvent(this,
                     createActivityAction(world, imageStore),
-                    this.actionPeriod);
+                    actionPeriod);
         }
     }
     private void transform(WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
-        MinerNotFull miner = new MinerNotFull(this.position, this.images, this.resourceLimit, this.resourceCount, this.actionPeriod, this.animationPeriod);
+        MinerNotFull miner = new MinerNotFull(position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
 
         world.removeEntity(this);
         scheduler.unscheduleAllEvents(this);
@@ -50,15 +50,15 @@ public class MinerFull extends Miners{
     }
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)
     {
-        if (adjacent(this.position, target.getPosition()))
+        if (adjacent(position, target.getPosition()))
         {
             return true;
         }
         else
         {
-            Point nextPos = this.nextPosition(world, target.getPosition());
+            Point nextPos = nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos))
+            if (!position.equals(nextPos))
             {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent())
