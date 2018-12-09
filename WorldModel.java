@@ -1,6 +1,7 @@
 import processing.core.PImage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 final class WorldModel
 {
@@ -23,6 +24,22 @@ final class WorldModel
          Arrays.fill(this.background[row], defaultBackground);
       }
    }
+
+   public List<Point> getEventRegion(Point origin)
+   {
+      List<Point> eventRegion = new ArrayList<>();
+      for (int x = origin.x - 1; x <  origin.x + 2; x++)
+         for (int y = origin.y - 1; y < origin.y + 2; y++)
+            eventRegion.add(new Point(x, y));
+
+      eventRegion = eventRegion.stream()
+              .filter(p -> !isOccupied(p))
+              .filter(p -> withinBounds(p))
+              .collect(Collectors.toList());
+
+      return eventRegion;
+   }
+
    public int getNumRows(){return numRows;}
    public int getNumCols(){return numCols;}
    public Set<Entity> getEntities(){return entities;}

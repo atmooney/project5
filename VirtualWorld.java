@@ -1,8 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 import processing.core.*;
+
+import javax.swing.text.html.Option;
 
 public final class VirtualWorld
    extends PApplet
@@ -97,6 +101,13 @@ public final class VirtualWorld
    public static final int SMITH_COL = 2;
    public static final int SMITH_ROW = 3;
 
+   public static final String SNOWBLOCK_KEY = "vein";
+   public static final int SNOWBLOCK_NUM_PROPERTIES = 5;
+   public static final int SNOWBLOCK_ID = 1;
+   public static final int VSNOWBLOCK = 2;
+   public static final int VSNOWBLOCK = 3;
+   public static final int SNOWBLOCK_ACTION_PERIOD = 4;
+
    public static final String VEIN_KEY = "vein";
    public static final int VEIN_NUM_PROPERTIES = 5;
    public static final int VEIN_ID = 1;
@@ -104,12 +115,37 @@ public final class VirtualWorld
    public static final int VEIN_ROW = 3;
    public static final int VEIN_ACTION_PERIOD = 4;
 
+   public static final int TILE_SIZE = 32;
+
    public ImageStore imageStore;
    public WorldModel world;
    public WorldView view;
    public EventScheduler scheduler;
 
    public long next_time;
+
+   public void mousePressed()
+   {
+      Point pressed = mouseToPoint(mouseX, mouseY);
+
+      if (!world.isOccupied(pressed)) {
+         List<Point> eventRegion = world.getEventRegion(pressed);
+
+         for (Point pos : eventRegion) {
+            SnowBlock snow = new SnowBlock(pos, imageStore.getImageList(VirtualWorld.SNOWBLOCK_KEY), SNOWBLOCK_ACTION_PERIOD));
+
+            world.addEntity(snow);
+            snow.scheduleActions(scheduler, world, imageStore);
+         }
+      }
+
+      else {System.out.println("occupied");}
+   }
+
+   private Point mouseToPoint(int x, int y)
+   {
+      return new Point(mouseX/TILE_SIZE, mouseY/TILE_SIZE);
+   }
 
    public void settings()
    {
