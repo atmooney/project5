@@ -23,8 +23,9 @@ public class MinerNotFull extends Miners{
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        Optional<Entity> notFullTarget = findNearest(world, position,
-                Ore.class);
+        Optional<Entity> notFullTarget = findNearest(world, position, Diamond.class);
+        if (notFullTarget == null)
+            notFullTarget = findNearest(world, position, Ore.class);
 
         if (!notFullTarget.isPresent() ||
                 !moveTo( world, notFullTarget.get(), scheduler) ||

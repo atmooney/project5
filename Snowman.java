@@ -21,26 +21,26 @@ public class Snowman extends SchedThreeEntities{
 
         Optional<Entity> snowmanTarget = findNearest(world, position,
                 Vein.class);
+        long nextPeriod = actionPeriod;
 
-        if (snowmanTarget.isPresent() &&
-                moveTo(world, snowmanTarget.get(), scheduler))
-        {
-            Point pos = this.position;  // store current position before removing
+        if (snowmanTarget.isPresent()) {
+            Point tgtPos = snowmanTarget.get().getPosition();
 
-            world.removeEntity(this);
-            scheduler.unscheduleAllEvents(this);
+            if (moveTo(world, snowmanTarget.get(), scheduler)) {
+                world.removeEntity(this);
+                scheduler.unscheduleAllEvents(this);
+                DiamondVein diamondVein = new DiamondVein(tgtPos, imageStore.getImageList(VirtualWorld.DIAMOND_VEIN_KEY), VirtualWorld.DIAMOND_VEIN_ACTION_PERIOD);
 
-            DiamondVein diamondVein = new DiamondVein(pos, imageStore.getImageList(VirtualWorld.SNOWMAN_KEY),
-                    this.actionPeriod / VirtualWorld.SNOWMAN_PERIOD_SCALE);
+                world.addEntity(diamondVein);
+                nextPeriod += actionPeriod;
+                diamondVein.scheduleActions(scheduler, world, imageStore);
+                return;
+            }
 
-            world.addEntity(diamondVein);
-            diamondVein.scheduleActions(scheduler, world, imageStore);
         }
-        else {
-            scheduler.scheduleEvent(this,
+        scheduler.scheduleEvent(this,
                     createActivityAction(world, imageStore),
-                    actionPeriod);
-        }
+                    nextPeriod);
     }
 
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)

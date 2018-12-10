@@ -21,7 +21,7 @@ public class DiamondVein extends VeinOreSched{
         if (openPt.isPresent())
         {
             Diamond diamond = new Diamond(openPt.get(), imageStore.getImageList(VirtualWorld.DIAMOND_KEY), VirtualWorld.DIAMOND_CORRUPT_MIN +
-                    VirtualWorld.rand.nextInt(VirtualWorld.DIAMOND_CORRUPT_MAX - VirtualWorld.DIAMOND_CORRUPT_MAX));
+                    VirtualWorld.rand.nextInt(VirtualWorld.DIAMOND_CORRUPT_MAX - VirtualWorld.DIAMOND_CORRUPT_MIN));
             world.addEntity(diamond);
             diamond.scheduleActions(scheduler, world, imageStore);
         }

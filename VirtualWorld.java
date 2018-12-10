@@ -73,6 +73,18 @@ public final class VirtualWorld
    public static final int BGND_COL = 2;
    public static final int BGND_ROW = 3;
 
+   public static final String DIAMOND_KEY = "diamond";
+   public static final int DIAMOND_CORRUPT_MIN = 20000;
+   public static final int DIAMOND_CORRUPT_MAX = 25000;
+   public static final int DIAMOND_REACH = 1;
+
+   public static final String DIAMOND_VEIN_KEY = "diamondvein";
+   public static final int DIAMOND_VEIN_NUM_PROPERTIES = 5;
+   public static final int DIAMOND_VEIN_ID = 1;
+   public static final int DIAMOND_VEIN_COL = 2;
+   public static final int DIAMOND_VEIN_ROW = 3;
+   public static final int DIAMOND_VEIN_ACTION_PERIOD = 4;
+
    public static final String MINER_KEY = "miner";
    public static final int MINER_NUM_PROPERTIES = 7;
    public static final int MINER_ID = 1;
@@ -109,6 +121,10 @@ public final class VirtualWorld
    public static final int SNOWBLOCK_ANIMATION_PERIOD = 600;
    public static final int SNOWBLOCK_PERIOD_SCALE = 4;
    public static final int SNOWBLOCK_ACTION_PERIOD = 4;
+
+   public static final String SNOWMAN_KEY = "snowman";
+   public static final int SNOWMAN_PERIOD_SCALE = 4;
+   public static final int SNOWMAN_ANIMATION = 100000;
 
    public static final String VEIN_KEY = "vein";
    public static final int VEIN_NUM_PROPERTIES = 5;

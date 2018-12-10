@@ -11,8 +11,6 @@ public class SwordMiner extends Miners{
         this.position = position;
         this.images = images;
         this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
         this.actionPeriod = actionPeriod;
         this.animationPeriod = animationPeriod;
     }

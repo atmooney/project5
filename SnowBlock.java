@@ -17,9 +17,14 @@ public class SnowBlock extends SchedThreeEntities {
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler){ //turns SnowBlock to PLACEHOLDER
         Point pos = this.position;  // store current position before removing
         long nextPeriod = animationPeriod;
-        scheduler.scheduleEvent(this,
-                createActivityAction(world, imageStore),
-                nextPeriod);
+        world.removeEntity(this);
+        scheduler.unscheduleAllEvents(this);
+
+        Snowman snowman = new Snowman(pos, imageStore.getImageList(VirtualWorld.SNOWMAN_KEY), this.actionPeriod / VirtualWorld.SNOWMAN_PERIOD_SCALE,
+                VirtualWorld.SNOWMAN_ANIMATION);
+
+        world.addEntity(snowman);
+        snowman.scheduleActions(scheduler, world, imageStore);
     }
 
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler){
