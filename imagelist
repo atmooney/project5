@@ -26,5 +26,6 @@ quake images/quake4.bmp 255 255 255 0
 quake images/quake5.bmp 255 255 255 0
 quake images/quake6.bmp 255 255 255 0
 rocks images/rock.bmp
+snowblock images/snowTblock.bmp
 vein images/vein.bmp
 background_default images/none.bmp

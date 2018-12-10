@@ -101,11 +101,13 @@ public final class VirtualWorld
    public static final int SMITH_COL = 2;
    public static final int SMITH_ROW = 3;
 
-   public static final String SNOWBLOCK_KEY = "vein";
-   public static final int SNOWBLOCK_NUM_PROPERTIES = 5;
-   public static final int SNOWBLOCK_ID = 1;
-   public static final int VSNOWBLOCK = 2;
-   public static final int VSNOWBLOCK = 3;
+   public static final String SNOWBLOCK_KEY = "snowblock";
+//   public static final int SNOWBLOCK_NUM_PROPERTIES = 5;
+//   public static final int SNOWBLOCK_ID = 1;
+//   public static final int VSNOWBLOCK = 2;
+//   public static final int SNOWBLOCK = 3;
+   public static final int SNOWBLOCK_ANIMATION_PERIOD = 600;
+   public static final int SNOWBLOCK_PERIOD_SCALE = 4;
    public static final int SNOWBLOCK_ACTION_PERIOD = 4;
 
    public static final String VEIN_KEY = "vein";
@@ -117,6 +119,9 @@ public final class VirtualWorld
 
    public static final int TILE_SIZE = 32;
 
+   public int shiftX = 0;
+   public int shiftY = 0;
+
    public ImageStore imageStore;
    public WorldModel world;
    public WorldView view;
@@ -126,13 +131,12 @@ public final class VirtualWorld
 
    public void mousePressed()
    {
-      Point pressed = mouseToPoint(mouseX, mouseY);
-
+      Point pressed = mouseToPoint(mouseX+shiftX, mouseY+shiftY);
       if (!world.isOccupied(pressed)) {
          List<Point> eventRegion = world.getEventRegion(pressed);
 
          for (Point pos : eventRegion) {
-            SnowBlock snow = new SnowBlock(pos, imageStore.getImageList(VirtualWorld.SNOWBLOCK_KEY), SNOWBLOCK_ACTION_PERIOD));
+            SnowBlock snow = new SnowBlock(pos, imageStore.getImageList(VirtualWorld.SNOWBLOCK_KEY), SNOWBLOCK_ACTION_PERIOD, SNOWBLOCK_ANIMATION_PERIOD);
 
             world.addEntity(snow);
             snow.scheduleActions(scheduler, world, imageStore);
@@ -142,9 +146,10 @@ public final class VirtualWorld
       else {System.out.println("occupied");}
    }
 
+
    private Point mouseToPoint(int x, int y)
    {
-      return new Point(mouseX/TILE_SIZE, mouseY/TILE_SIZE);
+      return new Point(x/TILE_SIZE, y/TILE_SIZE);
    }
 
    public void settings()
@@ -208,6 +213,10 @@ public final class VirtualWorld
                break;
          }
          view.shiftView(dx, dy);
+         if (!(shiftX >= VIEW_WIDTH) && !(shiftX < 0))
+            shiftX += (dx*TILE_SIZE);
+         if (!(shiftY >= VIEW_HEIGHT) && !(shiftY < 0))
+            shiftY +=(dy*TILE_SIZE);
       }
    }
 

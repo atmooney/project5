@@ -2,33 +2,28 @@ import processing.core.PImage;
 
 import java.util.List;
 
-public class SnowBlock extends ActivityEntity {
+public class SnowBlock extends SchedThreeEntities {
 
     public SnowBlock(Point position,
                 List<PImage> images,
-                int actionPeriod) {
+                int actionPeriod, int animationPeriod) {
         this.position = position;
         this.images = images;
         this.imageIndex = 0;
         this.actionPeriod = actionPeriod;
+        this.animationPeriod = animationPeriod;
     }
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler){ //turns SnowBlock to PLACEHOLDER
         Point pos = this.position;  // store current position before removing
-
-        world.removeEntity(this);
-        scheduler.unscheduleAllEvents(this);
-
-        OreBlob blob = new OreBlob(pos, imageStore.getImageList(VirtualWorld.BLOB_KEY), this.actionPeriod / VirtualWorld.BLOB_PERIOD_SCALE,
-                VirtualWorld.BLOB_ANIMATION_MIN +
-                        VirtualWorld.rand.nextInt(VirtualWorld.BLOB_ANIMATION_MAX - VirtualWorld.BLOB_ANIMATION_MIN));
-
-        world.addEntity(blob);
-        blob.scheduleActions(scheduler, world, imageStore);
+        long nextPeriod = animationPeriod;
+        scheduler.scheduleEvent(this,
+                createActivityAction(world, imageStore),
+                nextPeriod);
     }
 
-    public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore){
-        scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
+    public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler){
+        return true;
     }
 }
 
