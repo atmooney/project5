@@ -7,6 +7,8 @@ import processing.core.PImage;
 public class MinerNotFull extends Miners{
     private final int resourceLimit;
     private int resourceCount;
+    private final int newResourceLimit;
+    private int newResourceCount;
 
     public MinerNotFull(Point position,
                   List<PImage> images, int resourceLimit, int resourceCount,
@@ -17,6 +19,8 @@ public class MinerNotFull extends Miners{
         this.imageIndex = 0;
         this.resourceLimit = resourceLimit;
         this.resourceCount = resourceCount;
+        this.newResourceCount = 0;
+        this.newResourceLimit = 3;
         this.actionPeriod = actionPeriod;
         this.animationPeriod = animationPeriod;
     }
@@ -24,7 +28,7 @@ public class MinerNotFull extends Miners{
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
         Optional<Entity> notFullTarget = findNearest(world, position, Diamond.class);
-        if (notFullTarget == null)
+        if (notFullTarget.equals(Optional.empty()))
             notFullTarget = findNearest(world, position, Ore.class);
 
         if (!notFullTarget.isPresent() ||
@@ -40,7 +44,7 @@ public class MinerNotFull extends Miners{
     {
         if (resourceCount >= resourceLimit)
         {
-            MinerFull miner = new MinerFull(position, images, resourceLimit, 0, actionPeriod, animationPeriod);
+            MinerFull miner = new MinerFull(position, images, resourceLimit, 0, actionPeriod, animationPeriod, false);
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);
@@ -50,6 +54,16 @@ public class MinerNotFull extends Miners{
 
             return true;
         }
+        if (newResourceCount >= newResourceLimit){
+            MinerFull miner = new MinerFull(position, images, resourceLimit, 0, actionPeriod, animationPeriod, true);
+
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(miner);
+            miner.scheduleActions(scheduler, world, imageStore);
+            return true;
+        }
 
         return false;
     }
@@ -57,7 +71,10 @@ public class MinerNotFull extends Miners{
     {
         if (adjacent(position, target.getPosition()))
         {
-            resourceCount += 1;
+            if(target instanceof Ore)
+                resourceCount += 1;
+            if(target instanceof Diamond)
+                newResourceCount += 1;
             world.removeEntity(target);
             scheduler.unscheduleAllEvents(target);
 

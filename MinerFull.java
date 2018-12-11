@@ -7,10 +7,11 @@ import processing.core.PImage;
 public class MinerFull extends Miners{
     private final int resourceLimit;
     private int resourceCount;
+    private boolean sword;
 
     public MinerFull(Point position,
                   List<PImage> images, int resourceLimit, int resourceCount,
-                  int actionPeriod, int animationPeriod)
+                  int actionPeriod, int animationPeriod, boolean sword)
     {
         this.position = position;
         this.images = images;
@@ -19,6 +20,7 @@ public class MinerFull extends Miners{
         this.resourceCount = resourceCount;
         this.actionPeriod = actionPeriod;
         this.animationPeriod = animationPeriod;
+        this.sword = sword;
     }
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
@@ -40,13 +42,24 @@ public class MinerFull extends Miners{
     }
     private void transform(WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
-        MinerNotFull miner = new MinerNotFull(position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
+        if (!sword) {
+            MinerNotFull miner = new MinerNotFull(position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
 
-        world.removeEntity(this);
-        scheduler.unscheduleAllEvents(this);
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
 
-        world.addEntity(miner);
-        miner.scheduleActions(scheduler, world, imageStore);
+            world.addEntity(miner);
+            miner.scheduleActions(scheduler, world, imageStore);
+        }
+        if (sword){
+            SwordMiner miner = new SwordMiner(position, imageStore.getImageList("swordminer"), actionPeriod*2, animationPeriod);
+
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(miner);
+            miner.scheduleActions(scheduler, world, imageStore);
+        }
     }
     public boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler)
     {

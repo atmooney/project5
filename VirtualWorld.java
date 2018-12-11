@@ -74,8 +74,8 @@ public final class VirtualWorld
    public static final int BGND_ROW = 3;
 
    public static final String DIAMOND_KEY = "diamond";
-   public static final int DIAMOND_CORRUPT_MIN = 20000;
-   public static final int DIAMOND_CORRUPT_MAX = 25000;
+   public static final int DIAMOND_CORRUPT_MIN = 200000;
+   public static final int DIAMOND_CORRUPT_MAX = 250000;
    public static final int DIAMOND_REACH = 1;
 
    public static final String DIAMOND_VEIN_KEY = "diamondvein";
@@ -83,7 +83,7 @@ public final class VirtualWorld
    public static final int DIAMOND_VEIN_ID = 1;
    public static final int DIAMOND_VEIN_COL = 2;
    public static final int DIAMOND_VEIN_ROW = 3;
-   public static final int DIAMOND_VEIN_ACTION_PERIOD = 4;
+   public static final int DIAMOND_VEIN_ACTION_PERIOD = 20000;
 
    public static final String MINER_KEY = "miner";
    public static final int MINER_NUM_PROPERTIES = 7;
@@ -124,7 +124,8 @@ public final class VirtualWorld
 
    public static final String SNOWMAN_KEY = "snowman";
    public static final int SNOWMAN_PERIOD_SCALE = 4;
-   public static final int SNOWMAN_ANIMATION = 100000;
+   public static final int SNOWMAN_ANIMATION = 100;
+   public static final int SNOWMAN_ACTION_PERIOD = 8000;
 
    public static final String VEIN_KEY = "vein";
    public static final int VEIN_NUM_PROPERTIES = 5;
@@ -152,7 +153,7 @@ public final class VirtualWorld
          List<Point> eventRegion = world.getEventRegion(pressed);
 
          for (Point pos : eventRegion) {
-            SnowBlock snow = new SnowBlock(pos, imageStore.getImageList(VirtualWorld.SNOWBLOCK_KEY), SNOWBLOCK_ACTION_PERIOD, SNOWBLOCK_ANIMATION_PERIOD);
+            SnowBlock snow = new SnowBlock(pos, imageStore.getImageList(SNOWBLOCK_KEY), SNOWBLOCK_ACTION_PERIOD, SNOWBLOCK_ANIMATION_PERIOD);
 
             world.addEntity(snow);
             snow.scheduleActions(scheduler, world, imageStore);
@@ -229,9 +230,9 @@ public final class VirtualWorld
                break;
          }
          view.shiftView(dx, dy);
-         if (!(shiftX >= VIEW_WIDTH) && !(shiftX < 0))
+         if (!(shiftX + dx * TILE_SIZE > VIEW_WIDTH) && !(shiftX + dx * TILE_SIZE < 0))
             shiftX += (dx*TILE_SIZE);
-         if (!(shiftY >= VIEW_HEIGHT) && !(shiftY < 0))
+         if (!(shiftY + dy * TILE_SIZE > VIEW_HEIGHT) && !(shiftY + dy * TILE_SIZE < 0))
             shiftY +=(dy*TILE_SIZE);
       }
    }

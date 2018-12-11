@@ -17,7 +17,6 @@ public class DiamondVein extends VeinOreSched{
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) //spawns a diamond
     {
         Optional<Point> openPt = world.findOpenAround(this.position);
-
         if (openPt.isPresent())
         {
             Diamond diamond = new Diamond(openPt.get(), imageStore.getImageList(VirtualWorld.DIAMOND_KEY), VirtualWorld.DIAMOND_CORRUPT_MIN +

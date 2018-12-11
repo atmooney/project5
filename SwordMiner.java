@@ -5,6 +5,8 @@ import java.util.Optional;
 import processing.core.PImage;
 
 public class SwordMiner extends Miners{
+    private int swordDurability = 2;
+
     public SwordMiner(Point position,
                      List<PImage> images, int actionPeriod, int animationPeriod)
     {
@@ -25,11 +27,19 @@ public class SwordMiner extends Miners{
             Point tgtPos = swordTarget.get().getPosition();
 
             if (moveTo(world, swordTarget.get(), scheduler)) {
-                Quake quake = new Quake(tgtPos, imageStore.getImageList(VirtualWorld.QUAKE_KEY), VirtualWorld.QUAKE_ACTION_PERIOD, VirtualWorld.QUAKE_ANIMATION_PERIOD);
-
-                world.addEntity(quake);
+                world.removeEntity(swordTarget.get());
+                scheduler.unscheduleAllEvents(swordTarget.get());
                 nextPeriod += actionPeriod;
-                quake.scheduleActions(scheduler, world, imageStore);
+                swordDurability -= 1;
+                if (swordDurability == 0){
+                    MinerNotFull miner = new MinerNotFull(position, imageStore.getImageList(VirtualWorld.MINER_KEY), VirtualWorld.MINER_LIMIT,
+                            0, VirtualWorld.MINER_ACTION_PERIOD, VirtualWorld.MINER_ANIMATION_PERIOD);
+                    world.removeEntity(this);
+                    scheduler.unscheduleAllEvents(this);
+                    world.addEntity(miner);
+                    miner.scheduleActions(scheduler, world, imageStore);
+                    return;
+                }
             }
         }
 
