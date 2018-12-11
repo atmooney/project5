@@ -1,0 +1,38 @@
+1. The event is trigged by left-clicking on a tile that is not being occupied by an Entity.
+
+2. A 3x3 region of Snowblocks will attempt to spawn wherever there is a space not occupied by an Entity.
+	
+	Snowblocks behave similar to Ore; it turns into another Entity.
+
+	Snowblocks have a 20% chance of spawning a Snowman
+
+3a. DiamondVeins will spawn Diamonds instead of Ore but will spawn less frequently.
+	
+	Diamonds behave like Ore; they will turn into OreBlobs after some time.
+
+3b. When MinerNotFulls turn in 3 Diamonds, they transform into SwordMiners when they turn in Diamonds to the Blacksmith.
+
+	SwordMiners are able to destroy OreBlobs.
+
+	They can do this two times before they turn back MinerNotFulls.
+
+3c. OreBlobs will seek out and destroy DiamondVeins once all Veins are destroyed.
+
+4. The Snowman entity will seek out a Vein. Once it touches a Vein, it will expend its life to make it a DiamondVein
+
+5a. Austin Mooney
+	Images
+	Animations
+	MousePressed methods
+	Diamond class
+	SwordMiner class
+
+
+5b. Johnlam Tran
+	SnowBlock class
+	Snowman class
+	DiamondVein class
+	Reworked OreBlob targeting
+	Reworked MinerNotFull targeting
+	
+	
