@@ -20,6 +20,12 @@ public class OreBlob extends SchedThreeEntities{
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> blobTarget = findNearest(world,
                 position, Vein.class);
+
+        if (blobTarget.equals(Optional.empty())){
+            blobTarget = findNearest(world, position, DiamondVein.class);
+        }
+
+
         long nextPeriod = actionPeriod;
 
         if (blobTarget.isPresent()) {
