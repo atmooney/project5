@@ -52,7 +52,7 @@ public class MinerFull extends Miners{
             miner.scheduleActions(scheduler, world, imageStore);
         }
         if (sword){
-            SwordMiner miner = new SwordMiner(position, imageStore.getImageList("swordminer"), actionPeriod*2, animationPeriod);
+            SwordMiner miner = new SwordMiner(position, imageStore.getImageList("swordminer"), actionPeriod, animationPeriod);
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);

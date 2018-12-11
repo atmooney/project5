@@ -33,7 +33,7 @@ public class SwordMiner extends Miners{
                 swordDurability -= 1;
                 if (swordDurability == 0){
                     MinerNotFull miner = new MinerNotFull(position, imageStore.getImageList(VirtualWorld.MINER_KEY), VirtualWorld.MINER_LIMIT,
-                            0, VirtualWorld.MINER_ACTION_PERIOD, VirtualWorld.MINER_ANIMATION_PERIOD);
+                            0, actionPeriod, animationPeriod);
                     world.removeEntity(this);
                     scheduler.unscheduleAllEvents(this);
                     world.addEntity(miner);
